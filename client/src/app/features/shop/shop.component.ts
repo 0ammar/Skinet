@@ -11,7 +11,7 @@ import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Pagination } from '../../shared/models/pagination';
 import { FormsModule } from '@angular/forms';
 import { ShopService } from '../../core/servicse/shop.service';
-import { ShopParams } from '../../shared/models/ShopParams';
+import { shopParams } from '../../shared/models/shopParams';
 @Component({
   selector: 'app-shop',
   standalone: true,
@@ -38,7 +38,7 @@ export class ShopComponent {
     {name: 'Price: Low-High', value: 'priceAsc'},
     {name: 'Price: High-Low', value: 'priceDesc'},
   ]
-  shopParams = new ShopParams();
+  shopParams = new shopParams();
   pageSizeOptions = [5,10,15,20]
   ngOnInit() {
     this.initialiseShop();

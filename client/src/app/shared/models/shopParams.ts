@@ -1,4 +1,4 @@
-export class ShopParams {
+export class shopParams {
   brands: string[] = [];
   types: string[] = [];
   sort = 'name';
