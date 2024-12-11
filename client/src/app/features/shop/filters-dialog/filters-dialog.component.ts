@@ -4,7 +4,7 @@ import { MatListOption, MatSelectionList } from '@angular/material/list';
 import { MatButton } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
-import { ShopService } from '../../../core/servicse/shop.service';
+import { ShopService } from '../../../core/services/shop.service';
 @Component({
   selector: 'app-filters-dialog',
   standalone: true,

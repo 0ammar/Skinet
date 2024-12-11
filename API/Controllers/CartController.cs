@@ -1,40 +1,43 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Core.Entities;
 using Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class CartController(ICartService cartService) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<ShoppingCart>> GetCartById(string id)
         {
             var cart = await cartService.GetCartAsync(id);
-            return Ok(cart ?? new ShoppingCart{Id = id});
+            return Ok(cart ?? new ShoppingCart { Id = id });
         }
 
         [HttpPost]
         public async Task<ActionResult<ShoppingCart>> UpdateCart(ShoppingCart cart)
         {
+            if (string.IsNullOrWhiteSpace(cart.Id))
+            {
+                return BadRequest(new
+                {
+                    Title = "Validation Error",
+                    Status = 400,
+                    Errors = new { Id = new[] { "The id field is required." } }
+                });
+            }
             var uppdateCart = await cartService.SetCartAsync(cart);
-            if(uppdateCart == null) return BadRequest("Problem with the cart");
-            return uppdateCart;
+            if (uppdateCart == null) return BadRequest("Problem with the cart");
+            return Ok(uppdateCart);
         }
 
         [HttpDelete]
-        public async Task<ActionResult<ShoppingCart>> DeleteCart(string id)
+        public async Task<ActionResult> DeleteCart(string id)
         {
             var result = await cartService.DeleteCartAsync(id);
 
-            if ((bool)!result) return BadRequest("Problem deleting cart");
+            if (!result) return BadRequest("Problem deleting cart");
 
             return Ok();
-        } 
+        }
     }
 }

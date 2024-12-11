@@ -9,14 +9,23 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddControllers();
+// Add Database Context
 builder.Services.AddDbContext<StoreContext>(opt =>
 {
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
-
+// Add Database Redis
+builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
+{
+    var connString = builder.Configuration.GetConnectionString("Redis")
+       ?? throw new InvalidOperationException("Redis connection string is not configured properly.");
+    var configuration = ConfigurationOptions.Parse(connString, true);
+    return ConnectionMultiplexer.Connect(configuration);
+});
+// Configure services
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-
+builder.Services.AddSingleton<ICartService,CartService>();
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
@@ -25,25 +34,16 @@ builder.Services.AddCors(options =>
         policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials(); // Optional if credentials are needed
+              .AllowCredentials(); 
     });
 });
-
-builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
-{
-    var connString = builder.Configuration.GetConnectionString("Redis")
-       ?? throw new InvalidOperationException("Redis connection string is not configured properly.");
-    var configuration = ConfigurationOptions.Parse(connString, true);
-    return ConnectionMultiplexer.Connect(configuration);
-});
-builder.Services.AddSingleton<ICartService,CartService>();
 
 var app = builder.Build();
 
 // Use middleware
-app.UseMiddleware<ExeptionMiddleware>();
 app.UseCors("AllowSpecificOrigins");
 
+app.UseMiddleware<ExeptionMiddleware>();
 app.MapControllers();
 
 try

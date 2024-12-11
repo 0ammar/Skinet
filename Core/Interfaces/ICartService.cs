@@ -6,6 +6,6 @@ namespace Core.Interfaces
     {
         Task<ShoppingCart?> GetCartAsync(string key);
         Task<ShoppingCart?> SetCartAsync(ShoppingCart key);
-        Task<bool?> DeleteCartAsync(string key);
+        Task<bool> DeleteCartAsync(string key);
     }
 }

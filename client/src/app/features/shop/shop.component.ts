@@ -10,7 +10,7 @@ import { MatListOption, MatSelectionList, MatSelectionListChange } from '@angula
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { Pagination } from '../../shared/models/pagination';
 import { FormsModule } from '@angular/forms';
-import { ShopService } from '../../core/servicse/shop.service';
+import { ShopService } from '../../core/services/shop.service';
 import { shopParams } from '../../shared/models/shopParams';
 @Component({
   selector: 'app-shop',
