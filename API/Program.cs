@@ -1,4 +1,5 @@
 using API.Middleware;
+using Core.Entities;
 using Core.Interfaces;
 using Core.Interfaces.Services;
 using Infrastructure.Data;
@@ -26,6 +27,9 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(config =>
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddSingleton<ICartService,CartService>();
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<AppUser>()
+       .AddEntityFrameworkStores<StoreContext>();
 // Add CORS policy
 builder.Services.AddCors(options =>
 {
@@ -40,11 +44,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Use middleware
 app.UseCors("AllowSpecificOrigins");
 
 app.UseMiddleware<ExeptionMiddleware>();
+
 app.MapControllers();
+
+app.MapGroup("api").MapIdentityApi<AppUser>();
 
 try
 {
