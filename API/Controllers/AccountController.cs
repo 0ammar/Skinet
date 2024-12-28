@@ -61,7 +61,7 @@ namespace API.Controllers
             });
         }
 
-        [HttpGet]
+        [HttpGet("auth-status")]
         public ActionResult GetAuthState()
         {
             return Ok(new { IsAuthenticated = User.Identity?.IsAuthenticated ?? false });
@@ -72,7 +72,7 @@ namespace API.Controllers
         public async Task<ActionResult<Address>> CreateOrUpdateAddress(AddressDto addressDto)
         {
             var user = await signInManager.UserManager.GetUserByEmailWithhAddress(User);
-            
+
             if (user.Address == null)
             {
                 user.Address = addressDto.ToEntity();
